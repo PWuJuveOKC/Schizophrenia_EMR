@@ -23,3 +23,6 @@ Construct features based on topic models and PCA
 
 ### Folder 3: model
 Predictive models (length of hospitalization etc.)
+
+### Folder 4: topics_visualize
+Visualization for topic models (use all time data instead of prior hospitalization)

@@ -1,4 +1,6 @@
 import pandas as pd
+from collections import defaultdict
+import re
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -15,7 +17,18 @@ remove_set = set(['M998', '738.19', 'M99.8', 'Z00.00', 'Z02.79', 'V68.09',
 
 file = file[~file.condition_source_value.isin(remove_set)]
 replace_file = pd.read_csv('src/int_data/icd9_icd10_pw.csv')
-replace_dict = dict(zip(replace_file.ICD10, replace_file.ICD9))
+# replace_dict = dict(zip(replace_file.ICD10, replace_file.ICD9))
+replace_dict = defaultdict(set)
+icd10 = replace_file.loc[:, 'ICD10'].values
+icd9 = replace_file.loc[:, 'ICD9'].values
+for i in range(len(icd10)):
+    if icd10[i] in replace_dict:
+        replace_dict[icd10[i]].add(icd9[i])
+    else:
+        replace_dict[icd10[i]] = set([icd9[i]])
+
+for key in replace_dict:
+    replace_dict[key] = " ".join(replace_dict[key])
 
 file['icd9'] = file['condition_source_value']
 file['icd9'] = file.icd9.apply(lambda x: x.split(':')[-1])
