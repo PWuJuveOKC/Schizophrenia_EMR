@@ -16,7 +16,7 @@ Python3: pip3 install -r rquirements.txt
 ```
 
 ### Folder 1 : preprocess
-Preprocess different domains of data
+Preprocess different domains of data, cohort definition etc.
 
 ### Folder 2: feature_engineer
 Construct features based on topic models and PCA
@@ -25,4 +25,4 @@ Construct features based on topic models and PCA
 Predictive models (length of hospitalization etc.)
 
 ### Folder 4: topics_visualize
-Visualization for topic models (use all time data instead of prior hospitalization)
+Visualization for topic models (on defined cohort)
