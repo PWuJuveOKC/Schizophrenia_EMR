@@ -17,7 +17,7 @@ remove_set = set(['M998', '738.19', 'M99.8', 'Z00.00', 'Z02.79', 'V68.09',
 
 file = file[~file.condition_source_value.isin(remove_set)]
 replace_file = pd.read_csv('src/int_data/icd9_icd10_pw.csv')
-# replace_dict = dict(zip(replace_file.ICD10, replace_file.ICD9))
+
 replace_dict = defaultdict(set)
 icd10 = replace_file.loc[:, 'ICD10'].values
 icd9 = replace_file.loc[:, 'ICD9'].values
@@ -29,6 +29,22 @@ for i in range(len(icd10)):
 
 for key in replace_dict:
     replace_dict[key] = " ".join(replace_dict[key])
+
+# additional transforms
+replace_dict['F41.1'] = '300.02'
+replace_dict['F10.129'] = '305.00'
+replace_dict['F12.20'] = '304.30'
+replace_dict['J44.1'] = '491.21'
+replace_dict['F10.239'] = '291.81'
+replace_dict['R33.9'] = '788.20'
+replace_dict['F25.1'] = '295.70'
+replace_dict['R44.0'] = '780.1'
+replace_dict['F19.10'] = '305.80'
+replace_dict['R45.1'] = '307.9'
+replace_dict['F84.0'] = '299.00'
+replace_dict['C50.912'] = '174.9'
+replace_dict['F33.1'] = '296.32'
+
 
 file['icd9'] = file['condition_source_value']
 file['icd9'] = file.icd9.apply(lambda x: x.split(':')[-1])

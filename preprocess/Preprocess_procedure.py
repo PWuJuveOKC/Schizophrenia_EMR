@@ -13,19 +13,21 @@ dataName = 'procedure'
 
 file = pd.read_csv(dataPath + prefix + dataName + '.csv', delimiter='|', low_memory=False)
 
-# remove_set = set(['M998', '738.19', 'M99.8', 'Z00.00', 'Z02.79', 'V68.09',
-#                   'V76.12', 'Z12.31', 'V58.82', 'Z46.82', 'I9:799.9', '799.9', 'R69',
-#                   'V42.1', 'Z94.1', 'V70.0', 'V58.83', 'Z51.81', 'I10:R69', 'I9:738.19'])
+remove_set = set(['NC111', 'NS111'])
 
-#file = file[~file.condition_source_value.isin(remove_set)]
-# replace_file = pd.read_csv('src/int_data/icd9_icd10_pw.csv')
-# replace_dict = dict(zip(replace_file.ICD10, replace_file.ICD9))
+file = file[~file.procedure_source_value.isin(remove_set)].copy()
+replace_dict = dict()
+
+# additional transforms
+replace_dict['GZHZZZZ'] = '94.44'
+replace_dict['Z51.12'] = 'V58.12'
+replace_dict['Z00.00'] = 'V70.0'
 
 file['cpt'] = file['procedure_source_value']
 file['cpt'] = file.cpt.apply(lambda x: x.split(':')[-1])
-#file['icd9'] = file['icd9'].apply(lambda x: replace_dict[x] if x in replace_dict else x)
+file['cpt'] = file['cpt'].apply(lambda x: replace_dict[x] if x in replace_dict else x)
 
-# condition file with cleaned ICD9 code
+# procedure file with cleaned CPT code
 file.to_csv('src/int_data/procedure_cpt.csv', index=None)
 
 # Prior to hospitalization
@@ -38,5 +40,5 @@ dat['procedure_date'] = pd.to_datetime(dat['procedure_date'])
 dat_prior_hosp = dat[dat.procedure_date < dat.visit_start_date].copy()
 dat_prior_sub = dat_prior_hosp[['procedure_occurrence_id', 'person_id', 'procedure_concept_id', 'cpt', 'procedure_date', 'visit_start_date', 'hospitalization_hours']].copy()
 
-# condition file prior to hospitalization
+# procedure file prior to hospitalization
 dat_prior_sub.to_csv('src/int_data/procedure_cpt_prior_hosp.csv', index=None)

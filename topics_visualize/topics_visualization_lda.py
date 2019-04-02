@@ -18,16 +18,15 @@ code = 'cpt'
 # code = 'icd9'
 
 # defined schi cohort
-schi_dat = pd.read_csv('src/int_data/visit/schi_cohort.csv')
-schi_id = set(schi_dat.person_id.values)
+schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')
+schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
+schi_id = set(schi_dat_v1.person_id.values).union(set(set(schi_dat_v2.person_id.values)))
 
 file0 = pd.read_csv('src/int_data/' + domain + '_' + code + '.csv', low_memory=False)
 
 if not cohort:
-    # (3441063, 14) uni_id: 17723
     file = file0.copy()
 else:
-    # (984051, 14) uni_id: 3882
     file = file0[file0.person_id.isin(schi_id)].copy()
 
 df = file[[code, 'person_id']].groupby(['person_id'])[code].apply(lambda x: ' '.join(x)).reset_index()
