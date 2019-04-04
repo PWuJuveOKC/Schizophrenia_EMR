@@ -44,6 +44,7 @@ replace_dict['R45.1'] = '307.9'
 replace_dict['F84.0'] = '299.00'
 replace_dict['C50.912'] = '174.9'
 replace_dict['F33.1'] = '296.32'
+replace_dict['B20'] = '042'
 
 
 file['icd9'] = file['condition_source_value']

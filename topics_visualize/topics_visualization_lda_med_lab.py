@@ -18,8 +18,9 @@ domain = 'drug'
 code = 'drug_concept_id'
 
 # defined schi cohort
-schi_dat = pd.read_csv('src/int_data/visit/schi_cohort.csv')
-schi_id = set(schi_dat.person_id.values)
+schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')
+schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
+schi_id = set(schi_dat_v1.person_id.values).union(set(set(schi_dat_v2.person_id.values)))
 
 file0 = pd.read_csv(dataPath + prefix + domain + '.csv', delimiter='|', low_memory=False)
 
