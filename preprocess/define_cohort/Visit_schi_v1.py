@@ -1,13 +1,12 @@
 # v1: definition based on start_date
-import pandas as pd
-dataPath = r'src/int_data/'
-# dataPath = r"C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia/"
-visit_in = pd.read_csv(dataPath+r'/visit/visit_in.csv')
-visit_out = pd.read_csv(dataPath+r'/visit/visit_out.csv')
-schi_code = pd.read_csv(dataPath+r'/visit/schi_code.csv')
 
-# condition = pd.read_csv('src/int_data/condition_icd9.csv', low_memory=False)
-condition = pd.read_csv(dataPath+r'/condition_icd9.csv', low_memory=False)
+import pandas as pd
+
+visit_in = pd.read_csv('src/int_data/visit/visit_in.csv')
+visit_out = pd.read_csv('src/int_data/visit/visit_out.csv')
+schi_code = pd.read_csv('src/int_data/visit/schi_code.csv')
+
+condition = pd.read_csv('src/int_data/condition_icd9.csv', low_memory=False)
 condition_sub = condition[['person_id', 'condition_start_date', 'icd9']].copy()
 
 visit_in_sub = visit_in[['person_id', 'visit_start_date']].copy()
@@ -43,7 +42,6 @@ schi_sort = schi.sort_values(by = ['person_id', match_var])
 
 # dump this file to int_data
 schi_sort.to_csv('src/int_data/visit/schi_cohort_v1.csv', index=None)
-# schi_sort.to_csv(dataPath+'/visit/schi_cohort_v1.csv', index=None)
 
 # check missing occurence id and start date in condition file
 mis_occur = condition[condition.visit_occurrence_id.isnull()].copy()

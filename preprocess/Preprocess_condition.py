@@ -6,7 +6,6 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 dataPath = "./Data/trac_ 3772_schizophrenia/"
-# dataPath = "C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia/"
 prefix = 'trac_ 3772_schizophrenia_'
 dataName = 'condition'
 
@@ -18,7 +17,6 @@ remove_set = set(['M998', '738.19', 'M99.8', 'Z00.00', 'Z02.79', 'V68.09',
 
 file = file[~file.condition_source_value.isin(remove_set)]
 replace_file = pd.read_csv('src/int_data/icd9_icd10_pw.csv')
-# replace_file = pd.read_csv(dataPath+'/icd9_icd10_pw.csv')
 
 replace_dict = defaultdict(set)
 icd10 = replace_file.loc[:, 'ICD10'].values
@@ -54,13 +52,11 @@ file['icd9'] = file.icd9.apply(lambda x: x.split(':')[-1])
 file['icd9'] = file['icd9'].apply(lambda x: replace_dict[x] if x in replace_dict else x)
 
 # condition file with cleaned ICD9 code
-# file.to_csv('src/int_data/condition_icd9.csv', index=None)
-file.to_csv(dataPath+'condition_icd9.csv', index=None)
+file.to_csv('src/int_data/preprocessed/condition_icd9.csv', index=None)
 
 # Prior to hospitalization
 window_size = 10
 Hosp = pd.read_csv('src/int_data/hospitalization_window_' + str(window_size) + '.csv')
-# Hosp = pd.read_csv(dataPath+'/visit/hospitalization_window_' + str(window_size) + '.csv')
 file_hosp = pd.merge(file, Hosp, on='person_id', how='left')
 dat = file_hosp[file_hosp.hospitalization_hours.notnull()].copy()
 dat['visit_start_date'] = pd.to_datetime(dat['visit_start_date'])
@@ -69,5 +65,4 @@ dat_prior_hosp = dat[dat.condition_start_date < dat.visit_start_date].copy() #94
 dat_prior_sub = dat_prior_hosp[['condition_occurrence_id', 'person_id', 'condition_concept_id', 'icd9', 'condition_start_date', 'visit_start_date', 'hospitalization_hours']].copy()
 
 # condition file prior to hospitalization
-dat_prior_sub.to_csv('src/int_data/condition_icd9_prior_hosp.csv', index=None)
-# dat_prior_sub.to_csv(dataPath+'visit/condition_icd9_prior_hosp.csv', index=None)
+dat_prior_sub.to_csv('src/int_data/preprocessed/condition_icd9_prior_hosp.csv', index=None)

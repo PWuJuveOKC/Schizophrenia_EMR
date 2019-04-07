@@ -5,7 +5,7 @@ import pyLDAvis.gensim
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-# dataPath = r"C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia/"
+
 dataPath = "./Data/trac_ 3772_schizophrenia/"
 prefix = 'trac_ 3772_schizophrenia_'
 
@@ -18,14 +18,11 @@ code = 'cpt'
 # code = 'icd9'
 
 # defined schi cohort
-# schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')
-# schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
-schi_dat_v1 = pd.read_csv(dataPath+r'/visit/schi_cohort_v1.csv')
-schi_dat_v2 = pd.read_csv(dataPath+r'/visit/schi_cohort_v2.csv')
+schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')
+schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
 schi_id = set(schi_dat_v1.person_id.values).union(set(set(schi_dat_v2.person_id.values)))
 
-# file0 = pd.read_csv('src/int_data/' + domain + '_' + code + '.csv', low_memory=False)
-file0 = pd.read_csv(dataPath+ domain + '_' + code + '.csv', low_memory=False)
+file0 = pd.read_csv('src/int_data/' + domain + '_' + code + '.csv', low_memory=False)
 
 if not cohort:
     file = file0.copy()

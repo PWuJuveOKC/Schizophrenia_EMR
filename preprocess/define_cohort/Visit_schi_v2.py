@@ -2,15 +2,10 @@
 
 import pandas as pd
 
-# dataPath = r"C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia/"
-# visit_in = pd.read_csv(dataPath+'/visit/visit_in.csv')
-# visit_out = pd.read_csv(dataPath+'/visit/visit_out.csv')
-# schi_code = pd.read_csv(dataPath+'/visit/schi_code.csv')
 visit_in = pd.read_csv('src/int_data/visit/visit_in.csv')
 visit_out = pd.read_csv('src/int_data/visit/visit_out.csv')
 schi_code = pd.read_csv('src/int_data/visit/schi_code.csv')
 
-# condition = pd.read_csv(dataPath+'condition_icd9.csv', low_memory=False)
 condition = pd.read_csv('src/int_data/condition_icd9.csv', low_memory=False)
 condition_sub = condition[['person_id', 'condition_start_date', 'icd9', 'visit_occurrence_id']].copy()
 
@@ -46,5 +41,4 @@ schi = pd.concat([schi_in, schi_out])
 schi_sort = schi.sort_values(by = ['person_id', match_var])
 
 # dump this file to int_data
-# schi_sort.to_csv(dataPath+'/visit/schi_cohort_v2.csv', index=None)
 schi_sort.to_csv('src/int_data/visit/schi_cohort_v2.csv', index=None)
