@@ -7,6 +7,7 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 dataPath = "./Data/trac_ 3772_schizophrenia/"
+# dataPath = r"C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia/"
 prefix = 'trac_ 3772_schizophrenia_'
 dataName = 'visit'
 
@@ -60,4 +61,5 @@ file_in_window['start_date_min'] = file_in_window['visit_start_date'].apply(lamb
 file_in_window['visit_end_date'] = pd.to_datetime(file_in_window['visit_end_date'])
 file_in_window['end_date_max'] = file_in_window['visit_end_date'].apply(lambda x: x + pd.DateOffset(days = window_size))
 
+# file_in_window.to_csv(dataPath+'/visit/hospitalization_window_' + str(window_size) + '.csv', index=None)
 file_in_window.to_csv('src/int_data/hospitalization_window_' + str(window_size) + '.csv', index=None)
