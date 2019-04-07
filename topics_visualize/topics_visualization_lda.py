@@ -21,10 +21,11 @@ code = 'cpt'
 # schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')
 # schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
 schi_dat_v1 = pd.read_csv(dataPath+r'/visit/schi_cohort_v1.csv')
-schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
+schi_dat_v2 = pd.read_csv(dataPath+r'/visit/schi_cohort_v2.csv')
 schi_id = set(schi_dat_v1.person_id.values).union(set(set(schi_dat_v2.person_id.values)))
 
-file0 = pd.read_csv('src/int_data/' + domain + '_' + code + '.csv', low_memory=False)
+# file0 = pd.read_csv('src/int_data/' + domain + '_' + code + '.csv', low_memory=False)
+file0 = pd.read_csv(dataPath+ domain + '_' + code + '.csv', low_memory=False)
 
 if not cohort:
     file = file0.copy()

@@ -6,7 +6,7 @@ import pyLDAvis.gensim
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-
+# dataPath = "C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia/"
 dataPath = "./Data/trac_ 3772_schizophrenia/"
 prefix = 'trac_ 3772_schizophrenia_'
 dataName = 'procedure'
@@ -28,11 +28,13 @@ file['cpt'] = file.cpt.apply(lambda x: x.split(':')[-1])
 file['cpt'] = file['cpt'].apply(lambda x: replace_dict[x] if x in replace_dict else x)
 
 # procedure file with cleaned CPT code
+# file.to_csv(dataPath+'/procedure_cpt.csv', index=None)
 file.to_csv('src/int_data/procedure_cpt.csv', index=None)
 
 # Prior to hospitalization
 window_size = 10
 Hosp = pd.read_csv('src/int_data/hospitalization_window_' + str(window_size) + '.csv')
+# Hosp = pd.read_csv(dataPath+'/visit/hospitalization_window_' + str(window_size) + '.csv')
 file_hosp = pd.merge(file, Hosp, on='person_id', how='left')
 dat = file_hosp[file_hosp.hospitalization_hours.notnull()].copy()
 dat['visit_start_date'] = pd.to_datetime(dat['visit_start_date'])
@@ -41,4 +43,5 @@ dat_prior_hosp = dat[dat.procedure_date < dat.visit_start_date].copy()
 dat_prior_sub = dat_prior_hosp[['procedure_occurrence_id', 'person_id', 'procedure_concept_id', 'cpt', 'procedure_date', 'visit_start_date', 'hospitalization_hours']].copy()
 
 # procedure file prior to hospitalization
+# dat_prior_sub.to_csv(dataPath+'/visit/procedure_cpt_prior_hosp.csv', index=None)
 dat_prior_sub.to_csv('src/int_data/procedure_cpt_prior_hosp.csv', index=None)
