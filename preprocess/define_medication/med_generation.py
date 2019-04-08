@@ -29,8 +29,8 @@ file = file[file.drug_concept_id != 0]
 med_concept = pd.merge(file, concept_sub, on='drug_concept_id', how='left')
 
 # first generation meds
-drug_first_list = ['chlorpromazine', 'fluphenazine', 'haloperidol', 'loxapine', 'molindone', 'perphenazine',
-                   'pimozide', 'prochlorperazine', 'thioridazine', 'trifluoperazine', 'triflupromazine']
+drug_first_list = ['chlorpromazine', 'fluphenazine', 'haloperidol', 'loxapine', 'molindone',
+                   'perphenazine', 'thiothixene', 'trifluoperazine']
 
 first_id = set()
 for drug_first in drug_first_list:
@@ -43,8 +43,7 @@ for drug_first in drug_first_list:
     first_id = first_id.union(set(drug_dat_id))
 
 # second generation meds
-drug_second_list = ['aripiprazole', 'clozapine', 'iloperidone', 'olanzapine', 'paliperidone', 'quetiapine',
-                       'risperidone', 'ziprasidone']
+drug_second_list = ['aripiprazole', 'clozapine', 'olanzapine', 'quetiapine', 'risperidone', 'ziprasidone']
 
 second_id = set()
 for drug_second in drug_second_list:
@@ -56,4 +55,7 @@ for drug_second in drug_second_list:
     print('----------------------------------')
     second_id = second_id.union(set(drug_dat_id))
 
-
+first_second_union = first_id.union(second_id)
+first_second_int = first_id.intersection(second_id)
+first_only = first_id - first_second_int
+second_only = second_id - first_second_int

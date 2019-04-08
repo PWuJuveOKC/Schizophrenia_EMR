@@ -1,7 +1,6 @@
 import pandas as pd
 
 dataPath = "./Data/trac_ 3772_schizophrenia/"
-# dataPath = r"C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia/"
 prefix = 'trac_ 3772_schizophrenia_'
 
 parse_dates = ['visit_start_date', 'visit_start_datetime', 'visit_end_date', 'visit_end_datetime']
@@ -29,7 +28,5 @@ file_out = file[(file.visit_concept_id.isin(out_set)) |
                 (file.visit_type_concept_id.isin([9202, 9203, 42898160]))].copy()
 
 # dump to temp file
-# file_in.to_csv('src/int_data/visit/visit_in.csv', index=None)
-# file_out.to_csv('src/int_data/visit/visit_out.csv', index=None)
-file_in.to_csv(dataPath+r'/visit/visit_in.csv', index=None)
-file_out.to_csv(dataPath+r'/visit/visit_out.csv', index=None)
+file_in.to_csv('src/int_data/visit/visit_in.csv', index=None)
+file_out.to_csv('src/int_data/visit/visit_out.csv', index=None)

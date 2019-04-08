@@ -8,19 +8,22 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 num_topics = 10
 
-# condition
-domain = 'condition'
-input_code = 'icd9'
-input_file = 'condition_icd9_prior_hosp.csv'
 
-# procedure
-# domain = 'procedure'
-# input_code = 'cpt'
-# input_file = 'procedure_cpt_prior_hosp.csv'
+# lab
+domain = 'lab'
+input_code = 'measurement_concept_id'
+input_file = 'lab_prior_hosp.csv'
+
+# medication
+# domain = 'medication'
+# input_code = 'drug_concept_id'
+# input_file = 'medication_prior_hosp.csv'
+
 
 
 def clean_data(code, file_name):
     dat = pd.read_csv('src/int_data/preprocessed/' + file_name)
+    dat[code] = dat[code].apply(lambda x: str(x)).copy()
     df = dat[[code, 'person_id']].groupby(['person_id'])[code].apply(lambda x: ' '.join(x)).reset_index()
     data = df[code].values.tolist()
     out = [sent.split(' ') for sent in data]
