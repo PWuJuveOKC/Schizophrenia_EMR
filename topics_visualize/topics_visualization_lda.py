@@ -142,9 +142,9 @@ gg.writelines(g)
 gg.close()
 
 # transform id to real name
-id_name = pd.read_csv(dataPath+"condition_code_to_word.csv", header=None, dtype='str')
+id_name = pd.read_csv(dataPath+"procedure_code_to_word.csv", header=None, dtype='str')
 id_na = dict(zip(["\""+x+"\"" for x in id_name[0]], \
-                 ["\""+x+"\"" for x in id_name[1]]))
+                 ["\""+x[:25]+"\"" for x in id_name[1]]))
 ff = open(filename+".graphml","r+")
 graphx = ff.readlines()
 ff.close()
@@ -154,5 +154,54 @@ def wordtrans_to(word):
     return(word)
 g=[wordtrans_to(text[1]) for text in enumerate(graphx)]
 gg = open(filename+"_word.graphml","w")
+gg.writelines(g)
+gg.close()
+
+# transform lda_bow_condition_icd9_True.html
+id_name = pd.read_csv(dataPath+"condition_code_to_word.csv", header=None, dtype='str')
+id_na = dict(zip(["\""+x+"\"" for x in id_name[0]], \
+                 ["\""+x+"\"" for x in id_name[1]]))
+ff = open("lda_bow_condition_icd9_True.html","r+")
+graphx = ff.readlines()
+ff.close()
+def wordtrans_to(word):
+    for i, v in id_na.items():
+        word = word.replace('%s' % i, v)
+    return(word)
+g=[wordtrans_to(text[1]) for text in enumerate(graphx)]
+gg = open("lda_bow_condition_icd9_True_word.html","w")
+gg.writelines(g)
+gg.close()
+
+# cpt id to name list
+concept = pd.read_csv(dataPath + prefix + 'concept.csv',low_memory=False, delimiter="|")
+file_concept = pd.merge(file, concept, left_on='procedure_concept_id', right_on='concept_id')
+
+procedure_code_to_name = file_concept[['cpt','concept_name']]
+procedure_code_to_name.to_csv(dataPath+"/procedure_code_to_word.csv", index=None, header=None)
+
+# combination lda_bow_cond_proc_med_10_True.html
+id_name = pd.read_csv(dataPath+"procedure_code_to_word.csv", header=None, dtype='str')
+id_na = dict(zip(["\""+x+"\"" for x in id_name[0]], \
+                 ["\""+x[:25]+"\"" for x in id_name[1]]))
+id_name = pd.read_csv(dataPath+"condition_code_to_word.csv", header=None, dtype='str')
+id_na1 = dict(zip(["\""+x+"\"" for x in id_name[0]], \
+                 ["\""+x+"\"" for x in id_name[1]]))
+id_name = pd.read_csv(dataPath+"medication_code_to_word.csv", dtype='str')
+id_na2 = dict(zip(["\""+x+"\"" for x in id_name.iloc[:,0]], \
+                 ["\""+x[:25]+"\"" for x in id_name.iloc[:,1]]))
+
+id_na.update(id_na1)
+id_na.update(id_na2)
+
+ff = open("lda_bow_cond_proc_med_10_True.html","r+")
+graphx = ff.readlines()
+ff.close()
+def wordtrans_to(word):
+    for i, v in id_na.items():
+        word = word.replace('%s' % i, v)
+    return(word)
+g=[wordtrans_to(text[1]) for text in enumerate(graphx)]
+gg = open("lda_bow_cond_proc_med_10_True_word.html","w")
 gg.writelines(g)
 gg.close()
