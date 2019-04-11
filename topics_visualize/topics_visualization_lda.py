@@ -25,7 +25,7 @@ schi_dat_v2 = pd.read_csv(dataPath+r'/visit/schi_cohort_v2.csv')
 schi_id = set(schi_dat_v1.person_id.values).union(set(set(schi_dat_v2.person_id.values)))
 
 file0 = pd.read_csv('src/int_data/' + domain + '_' + code + '.csv', low_memory=False)
-# file0 = pd.read_csv('src/int_data/' + domain + '_' + code + '.csv', low_memory=False)
+# file0 = pd.read_csv(dataPath + domain + '_' + code + '.csv', low_memory=False)
 
 if not cohort:
     file = file0.copy()
@@ -107,7 +107,7 @@ wr.graph.to_graphml(graph, './mymodel_tc.graphml')
 
 from tethne.readers.plain_text import read
 # corpus2 = read(r"/mnt/hgfs/Yuanjia/schi/trac_ 3772_schizophrenia/procedure_cpt_dat")
-corpus2 = read(r"/mnt/hgfs/Yuanjia/schi/trac_ 3772_schizophrenia/procedure_cpt_dat/")
+corpus2 = read(r"/mnt/hgfs/Yuanjia/schi/trac_ 3772_schizophrenia/"+"_".join([domain,code,"dat"]))
 
 from tethne.model.corpus import mallet
 model = mallet.LDAModel(corpus2, featureset_name='plain_text')
@@ -116,14 +116,15 @@ model.max_iter=500
 model.fit()
 model.print_topics(Nwords=15)
 from tethne.networks import topics
-threshold = 0.001
+threshold = 0.007
 graph = topics.terms(model, threshold=threshold)
 import tethne.writers as wr
-wr.graph.to_graphml(graph, r"/mnt/hgfs/Yuanjia/schi/networks/procedure_cpt_"+str(threshold)+".graphml")
+wr.graph.to_graphml(graph, r"/mnt/hgfs/Yuanjia/schi/networks/"+"_".join([domain,code,str(threshold)])+".graphml")
 
-# transform id to names
+# transform id to real id
 os.chdir(r"C:/Users/Peter Xu/Desktop/Yuanjia/schi/networks/")
-ff = open('procedure_cpt_0.001.graphml',"r+")
+filename = 'procedure_cpt_0.0065' # use the file name that you want to transform
+ff = open(filename+".graphml","r+")
 graphx = ff.readlines()
 ff.close()
 
@@ -136,6 +137,22 @@ def wordtrans_to(word):
         word = word.replace('%s' % i, v)
     return(word)
 g=[wordtrans_to(text[1]) for text in enumerate(graphx)]
-gg = open('procedure_cpt_0.001_word.graphml',"w")
+gg = open(filename+".graphml","w")
+gg.writelines(g)
+gg.close()
+
+# transform id to real name
+id_name = pd.read_csv(dataPath+"condition_code_to_word.csv", header=None, dtype='str')
+id_na = dict(zip(["\""+x+"\"" for x in id_name[0]], \
+                 ["\""+x+"\"" for x in id_name[1]]))
+ff = open(filename+".graphml","r+")
+graphx = ff.readlines()
+ff.close()
+def wordtrans_to(word):
+    for i, v in id_na.items():
+        word = word.replace('%s' % i, v)
+    return(word)
+g=[wordtrans_to(text[1]) for text in enumerate(graphx)]
+gg = open(filename+"_word.graphml","w")
 gg.writelines(g)
 gg.close()
