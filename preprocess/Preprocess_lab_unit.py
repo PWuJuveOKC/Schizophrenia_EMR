@@ -1087,7 +1087,8 @@ tp1 = tp1.append(tmp)
 lab_concept = lab_concept.loc[~lab_concept.measurement_id.isin(w_id)]
 lab_concept = to_cover(lab_concept, tp1)
 
-tp1 = pd.merge(tp1, file[['measurement_id','person_id']])
+###
+tp1 = pd.merge(tp1, file[['measurement_id','person_id','measurement_date']])
 tp1.to_csv('Cleaned_lab.csv', index=None)
 
 # read the visit data
@@ -1126,3 +1127,14 @@ lda_model = gensim.models.LdaMulticore(bow_corpus, num_topics=num_topic, id2word
 # visualization
 lda_display_bow = pyLDAvis.gensim.prepare(lda_model, bow_corpus, dictionary, sort_topics=True)
 pyLDAvis.save_html(lda_display_bow, 'lab_topic_model_t3.html')
+
+
+# create dataframe for condition topics
+doc_topics = []
+for bow in bow_corpus:
+    doc_topics.append(dict(lda_model.get_document_topics(bow, per_word_topics=False)))
+topics_emb = pd.DataFrame(doc_topics)
+topics_emb.fillna(0, inplace=True)
+topics_emb.columns = ['lab_prior_hospitalization_topic_' + str(i) for i in range(1, num_topic + 1)]
+topics_emb['person_id'] = df.person_id
+topics_emb.to_csv('lab_prior_hospitalization_model_feat.csv', index=None)
