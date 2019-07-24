@@ -1091,6 +1091,7 @@ lab_concept = to_cover(lab_concept, tp1)
 tp1 = pd.merge(tp1, file[['measurement_id','person_id','measurement_date']])
 tp1.to_csv('Cleaned_lab.csv', index=None)
 
+tp1 = pd.read_csv('Cleaned_lab.csv',low_memory=False)
 # read the visit data
 parse_dates = ['visit_start_date', 'visit_start_datetime', 'visit_end_date', 'visit_end_datetime']
 visit = pd.read_csv('trac_ 3772_schizophrenia_visit.csv', delimiter='|', date_parser=parse_dates, low_memory=False)
@@ -1105,8 +1106,10 @@ tp1 = pd.merge(tp1, visit[['person_id','visit_start_date']], how='inner')
 # screen
 tp1 = tp1.query('measurement_date <= visit_start_date')
 # further reduce to the defined cohort. (schi_cohort.csv is sent by Peng, 2019/3/29 (11:37))
-cohort = pd.read_csv('./visit/schi_cohort.csv')
-tp1 = tp1[tp1.person_id.isin(cohort['person_id'])]
+cohort1 = pd.read_csv('./visit/schi_cohort_v1.csv')
+cohort2 = pd.read_csv('./visit/schi_cohort_v2.csv')
+cohort = set(cohort1.person_id).union(set(cohort2.person_id))
+tp1 = tp1[tp1.person_id.isin(cohort)]
 
 
 # model
@@ -1135,6 +1138,6 @@ for bow in bow_corpus:
     doc_topics.append(dict(lda_model.get_document_topics(bow, per_word_topics=False)))
 topics_emb = pd.DataFrame(doc_topics)
 topics_emb.fillna(0, inplace=True)
-topics_emb.columns = ['lab_prior_hospitalization_topic_' + str(i) for i in range(1, num_topic + 1)]
+topics_emb.columns = ['lab_prior_' + str(i) for i in range(1, num_topic + 1)]
 topics_emb['person_id'] = df.person_id
 topics_emb.to_csv('lab_prior_hospitalization_model_feat.csv', index=None)
