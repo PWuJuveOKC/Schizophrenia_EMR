@@ -1,7 +1,8 @@
-## From Tianchen
 import pandas as pd
 import warnings
 import numpy as np
+import os
+os.chdir("C:/Users/Peter Xu/Desktop/Yuanjia/schi/trac_ 3772_schizophrenia")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 desired_width = 300
 pd.set_option('display.width', desired_width)
@@ -10,12 +11,12 @@ pd.set_option('display.max_columns', 20)
 # Load Data
 # file1 = pd.read_csv('trac_ 3772_schizophrenia_measurement.csv',delimiter='|',nrows=300,
                     # dtype={'visit_occurrence_id':object},parse_dates=True)
-file = pd.read_csv('Data/trac_ 3772_schizophrenia/trac_ 3772_schizophrenia_measurement.csv',delimiter='|',
+file = pd.read_csv('trac_ 3772_schizophrenia_measurement.csv',delimiter='|',
                     dtype={'visit_occurrence_id':object},parse_dates=True)
 
 
 parse_dates = ['valid_start_date', 'valid_end_date']
-concept = pd.read_csv('Data/trac_ 3772_schizophrenia/trac_ 3772_schizophrenia_concept.csv', delimiter='|', date_parser=parse_dates, low_memory=False)
+concept = pd.read_csv('trac_ 3772_schizophrenia_concept.csv', delimiter='|', date_parser=parse_dates, low_memory=False)
 
 concept_sub = concept[['concept_id', 'concept_name']]
 
@@ -26,7 +27,7 @@ lab_concept = lab_concept[lab_concept.measurement_concept_id != 0]
 
 
 to_take = ['measurement_id','value_as_number','unit_concept_id','unit_source_value']
-person = pd.read_csv('Data/trac_ 3772_schizophrenia/trac_ 3772_schizophrenia_person.csv',delimiter='|',parse_dates=True)
+person = pd.read_csv('trac_ 3772_schizophrenia_person.csv',delimiter='|',parse_dates=True)
 def to_cover(org, new):
     tt = pd.merge(org[['measurement_id','value_as_number','unit_concept_id','unit_source_value']], new, on='measurement_id', how='left')
     org.loc[~tt.value_as_number_y.isnull().values,'value_as_number']=tt.loc[~tt.value_as_number_y.isnull(),'value_as_number_y'].tolist()
@@ -182,7 +183,7 @@ val[(tmp.gender_source_value =='F') & (val.apply(np.isreal)) & ((tmp.value_as_nu
 val[(tmp.gender_source_value =='M') & (val.apply(np.isreal)) & ((tmp.value_as_number >= 51.0) | (tmp.value_as_number <= 37.5))] = 'abnormal'
 val[val.apply(np.isreal)] = 'normal'
 tmp['val'] = 'Hematocrit_' + val
-tmp = tmp.drop(['person_id', 'gender_source_value'], axis=1)
+tmp = tmp.drop(columns=['person_id', 'gender_source_value'])
 # lab_concept = lab_concept.loc[~lab_concept.measurement_id.isin(wrong_id)]
 # lab_concept = to_cover(lab_concept, tmp)
 w_id = w_id.append(wrong_id)
@@ -209,7 +210,7 @@ val[(tmp.gender_source_value =='F') & (val.apply(np.isreal)) & ((tmp.value_as_nu
 val[(tmp.gender_source_value =='M') & (val.apply(np.isreal)) & ((tmp.value_as_number >= 17.7) | (tmp.value_as_number <= 13))] = 'abnormal'
 val[val.apply(np.isreal)] = 'normal'
 tmp['val'] = 'Hemoglobin_' + val
-tmp = tmp.drop(['person_id', 'gender_source_value'], axis=1)
+tmp = tmp.drop(columns=['person_id', 'gender_source_value'])
 # lab_concept = lab_concept.loc[~lab_concept.measurement_id.isin(wrong_id)]
 # lab_concept = to_cover(lab_concept, tmp)
 w_id = w_id.append(wrong_id)
@@ -305,7 +306,7 @@ val[(tmp.gender_source_value =='F') & (val.apply(np.isreal)) & ((tmp.value_as_nu
 val[(tmp.gender_source_value =='M') & (val.apply(np.isreal)) & ((tmp.value_as_number >= 5.65) | (tmp.value_as_number <= 4.35))] = 'abnormal'
 val[val.apply(np.isreal)] = 'normal'
 tmp['val'] = 'Erythrocytes_Blood_count_' + val
-tmp = tmp.drop(['person_id', 'gender_source_value'], axis=1)
+tmp = tmp.drop(columns=['person_id', 'gender_source_value'])
 # lab_concept = lab_concept.loc[~lab_concept.measurement_id.isin(wrong_id)]
 # lab_concept = to_cover(lab_concept, tmp)
 w_id = w_id.append(wrong_id)
@@ -332,7 +333,7 @@ val[(tmp.gender_source_value =='M') & (val.apply(np.isreal)) & (tmp.value_as_num
 val[(val.apply(np.isreal)) & ((tmp.value_as_number >= 34) | (tmp.value_as_number <= 30))] = 'abnormal'
 val[val.apply(np.isreal)] = 'normal'
 tmp['val'] = 'Erythrocyte_concentration_' + val
-tmp = tmp.drop(['person_id', 'gender_source_value'], axis=1)
+tmp = tmp.drop(columns=['person_id', 'gender_source_value'])
 # lab_concept = lab_concept.loc[~lab_concept.measurement_id.isin(wrong_id)]
 # lab_concept = to_cover(lab_concept, tmp)
 w_id = w_id.append(wrong_id)
@@ -441,13 +442,13 @@ tmp.value_as_number.describe()
 # mean          1.285983
 # min           0.100000
 # max          36.630000
-tmp = pd.merge(tmp, person[['person_id','gender_source_value']], how='left')
+tmp = pd.merge(tmp, person[['person_id','gender_source_value']], how = 'left')
 val = tmp['value_as_number'].copy()
 val[(tmp.gender_source_value =='F') & (val.apply(np.isreal)) & ((tmp.value_as_number >= 90) | (tmp.value_as_number <= 45))] = 'abnormal'
 val[(tmp.gender_source_value =='M') & (val.apply(np.isreal)) & ((tmp.value_as_number >= 110) | (tmp.value_as_number <= 60))] = 'abnormal'
 val[val.apply(np.isreal)] = 'normal'
 tmp['val'] = 'Creatinine_plasma_' + val
-tmp = tmp.drop(['person_id', 'gender_source_value'], axis=1)
+tmp = tmp.drop(columns=['person_id', 'gender_source_value'])
 # lab_concept = lab_concept.loc[~lab_concept.measurement_id.isin(wrong_id)]
 # lab_concept = to_cover(lab_concept, tmp)
 w_id = w_id.append(wrong_id)
@@ -1067,7 +1068,7 @@ val[(tmp.gender_source_value =='F') & (val.apply(np.isreal)) & ((tmp.value_as_nu
 val[(tmp.gender_source_value =='M') & (val.apply(np.isreal)) & ((tmp.value_as_number >= 73) | (tmp.value_as_number <= 40))] = 'abnormal'
 val[val.apply(np.isreal)] = 'normal'
 tmp['val'] = 'cho_hdl_' + val
-tmp = tmp.drop(['person_id', 'gender_source_value'], axis=1)
+tmp = tmp.drop(columns=['person_id', 'gender_source_value'])
 # lab_concept = lab_concept.loc[~lab_concept.measurement_id.isin(wrong_id)]
 # lab_concept = to_cover(lab_concept, tmp)
 w_id = w_id.append(wrong_id)
@@ -1088,12 +1089,12 @@ lab_concept = to_cover(lab_concept, tp1)
 
 ###
 tp1 = pd.merge(tp1, file[['measurement_id','person_id','measurement_date']])
-tp1.to_csv('src/int_data/Cleaned_lab.csv', index=None)
+tp1.to_csv('Cleaned_lab.csv', index=None)
 
-tp1 = pd.read_csv('src/int_data/Cleaned_lab.csv')
+tp1 = pd.read_csv('Cleaned_lab.csv',low_memory=False)
 # read the visit data
 parse_dates = ['visit_start_date', 'visit_start_datetime', 'visit_end_date', 'visit_end_datetime']
-visit = pd.read_csv('Data//trac_ 3772_schizophrenia/trac_ 3772_schizophrenia_visit.csv', delimiter='|', date_parser=parse_dates, low_memory=False)
+visit = pd.read_csv('trac_ 3772_schizophrenia_visit.csv', delimiter='|', date_parser=parse_dates, low_memory=False)
 # keep only inpatient records (from Natalie, April 11, 2019 at 5:13 PM)
 visit = visit.query('(visit_concept_id == 9201) | (visit_concept_id == 8717) | (visit_type_concept_id == 9201)')
 # sort by date
@@ -1104,9 +1105,39 @@ visit = visit.drop_duplicates(['person_id'])
 tp1 = pd.merge(tp1, visit[['person_id','visit_start_date']], how='inner')
 # screen
 tp1 = tp1.query('measurement_date <= visit_start_date')
-# further reduce to the defined cohort.
-schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')
-schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
-schi_id = set(schi_dat_v1.person_id.values).union(set(set(schi_dat_v2.person_id.values)))
-tp1 = tp1[tp1.person_id.isin(schi_id)]
-tp1.to_csv('src/int_data/preprocessed/Cleaned_lab_cohort.csv', index=None)
+# further reduce to the defined cohort. (schi_cohort.csv is sent by Peng, 2019/3/29 (11:37))
+cohort1 = pd.read_csv('./visit/schi_cohort_v1.csv')
+cohort2 = pd.read_csv('./visit/schi_cohort_v2.csv')
+cohort = set(cohort1.person_id).union(set(cohort2.person_id))
+tp1 = tp1[tp1.person_id.isin(cohort)]
+
+
+# model
+import gensim
+from gensim import corpora, models
+import pyLDAvis.gensim
+df = tp1[['val', 'person_id']].groupby(['person_id'])['val'].apply(lambda x: ' '.join(x)).reset_index()
+data = df['val'].values.tolist()
+res = [sent.split(' ') for sent in data]
+dictionary = gensim.corpora.Dictionary(res)
+count = 0
+dictionary.filter_extremes(no_below=5, no_above=1.0, keep_n=10000)
+bow_corpus = [dictionary.doc2bow(doc) for doc in res]
+num_topic = 3
+seed = 11
+lda_model = gensim.models.LdaMulticore(bow_corpus, num_topics=num_topic, id2word=dictionary, passes=20, workers=10,
+                                       iterations=500, random_state=seed)
+# visualization
+lda_display_bow = pyLDAvis.gensim.prepare(lda_model, bow_corpus, dictionary, sort_topics=True)
+pyLDAvis.save_html(lda_display_bow, 'lab_topic_model_t3.html')
+
+
+# create dataframe for condition topics
+doc_topics = []
+for bow in bow_corpus:
+    doc_topics.append(dict(lda_model.get_document_topics(bow, per_word_topics=False)))
+topics_emb = pd.DataFrame(doc_topics)
+topics_emb.fillna(0, inplace=True)
+topics_emb.columns = ['lab_prior_' + str(i) for i in range(1, num_topic + 1)]
+topics_emb['person_id'] = df.person_id
+topics_emb.to_csv('lab_prior_hospitalization_model_feat.csv', index=None)
