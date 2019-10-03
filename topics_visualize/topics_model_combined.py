@@ -12,8 +12,8 @@ prefix = 'trac_ 3772_schizophrenia_'
 # define cohort
 cohort = True
 
-file_condition = pd.read_csv('src/int_data/condition_icd9.csv', low_memory=False)
-file_procedure = pd.read_csv('src/int_data/procedure_cpt.csv', low_memory=False)
+file_condition = pd.read_csv('src/int_data/preprocessed/condition_icd9.csv', low_memory=False)
+file_procedure = pd.read_csv('src/int_data/preprocessed/procedure_cpt.csv', low_memory=False)
 file_medication = pd.read_csv(dataPath + prefix + 'drug.csv', delimiter='|', low_memory=False)
 
 file_condition1 = file_condition[['person_id', 'condition_concept_id', 'condition_start_date', 'icd9']].copy()

@@ -1,4 +1,4 @@
-# v1: definition based on visit_occurrence_id
+# v2: definition based on visit_occurrence_id
 
 import pandas as pd
 

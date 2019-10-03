@@ -3,12 +3,12 @@ import numpy as np
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
-feature_size = 3
+feature_size = 10
 
-# lab
-domain = 'lab'
-input_file = 'Cleaned_lab_cohort.csv'
-code = 'val'
+# medication
+domain = 'medication'
+input_file = 'medication_prior_hosp.csv'
+code = 'drug_concept_id'
 
 # defined schi cohort
 schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')

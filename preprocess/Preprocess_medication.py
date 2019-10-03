@@ -18,6 +18,12 @@ concept_sub = concept[concept['concept_id'].isin(med_concept_id_uni)].copy()
 concept_sub = concept_sub[['concept_id', 'concept_name']]
 # concept_sub.to_csv('src/int_data/medication_id_to_name.csv', index=None)
 
+# read grouped medications
+tmp = pd.ExcelFile('Data/medication_id_to_name_Groups_copy.xlsx')
+med_group = tmp.parse("Sheet3")
+replace_id_dict = dict(zip(med_group.concept_id, med_group.replace_id))
+file['drug_concept_id'] = file['drug_concept_id'].apply(lambda x: replace_id_dict[x] if x in replace_id_dict else x)
+
 concept_id_freq = pd.DataFrame(file.drug_concept_id.value_counts())
 concept_id_freq.columns = [['frequency']]
 concept_id_freq['concept_id'] = concept_id_freq.index

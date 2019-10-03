@@ -19,6 +19,10 @@ file.isnull().sum()
 out_set = {8756, 8809, 8870, 9202, 9203, 4150254, 4213245, 4214465, 4214691, 4249897, 45765807, 45765824,
            45765829, 45765841, 45765869, 45765880, 45765994, 45773134}
 
+# Step 0: remove ER visits
+file = file[~file.visit_concept_id.isin([8870, 9203])].copy()
+file = file[file.visit_type_concept_id != 9203].copy()
+
 # Step 1: separate in or out patient files
 # 72421 obs
 file_in = file[(file.visit_concept_id.isin([8717, 9201])) | (file.visit_type_concept_id == 9201)].copy()

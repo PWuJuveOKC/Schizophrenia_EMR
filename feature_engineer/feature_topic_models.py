@@ -6,28 +6,33 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-num_topics = 10
+num_topics = 5
 
 # condition
-domain = 'condition'
-input_code = 'icd9'
-input_file = 'condition_icd9_prior_hosp.csv'
+# domain = 'condition'
+# input_code = 'icd9'
+# input_file = 'condition_icd9_prior_hosp.csv'
 
 # procedure
-# domain = 'procedure'
-# input_code = 'cpt'
-# input_file = 'procedure_cpt_prior_hosp.csv'
+domain = 'procedure'
+input_code = 'cpt'
+input_file = 'procedure_cpt_prior_hosp.csv'
 
+# defined schi cohort
+schi_dat_v1 = pd.read_csv('src/int_data/visit/schi_cohort_v1.csv')
+schi_dat_v2 = pd.read_csv('src/int_data/visit/schi_cohort_v2.csv')
+schi_id = set(schi_dat_v1.person_id.values).union(set(set(schi_dat_v2.person_id.values)))
 
 def clean_data(code, file_name):
-    dat = pd.read_csv('src/int_data/preprocessed/' + file_name)
+    dat0 = pd.read_csv('src/int_data/preprocessed/' + file_name)
+    dat = dat0[dat0.person_id.isin(schi_id)].copy()
     df = dat[[code, 'person_id']].groupby(['person_id'])[code].apply(lambda x: ' '.join(x)).reset_index()
     data = df[code].values.tolist()
     out = [sent.split(' ') for sent in data]
     return out, df
 
 
-def lda_model(input_list, num_topic=10, seed=111):
+def lda_model(input_list, num_topic=num_topics , seed=111):
     # Bag of Words in Dataset
     dictionary = gensim.corpora.Dictionary(input_list)
     dictionary.filter_extremes(no_below=5, no_above=1, keep_n=10000)
@@ -54,4 +59,4 @@ topics_emb = pd.DataFrame(doc_topics)
 topics_emb.fillna(0, inplace=True)
 topics_emb.columns = [domain + '_' + 'topic_' + str(i) for i in range(1, num_topics + 1)]
 topics_emb['person_id'] = my_dat.person_id
-topics_emb.to_csv('src/int_data/feat_eng/' + domain + '_topic_model_feat.csv', index=None)
+topics_emb.to_csv('src/int_data/feat_eng/' + domain + '_topic_model_feat_' + str(num_topics) + '.csv', index=None)
