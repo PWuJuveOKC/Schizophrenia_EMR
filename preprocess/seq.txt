@@ -1,0 +1,9 @@
+preprocess_visit --> visit_in.csv/visit_out.csv
+preprocess_hopitalization --> hospitalization_window_10
+preprocess_condition --> condition_icd9.csv/condition_icd9_prior_hosp.csv
+preprocess_procedure --> procedure_cpt.csv/procedure_cpt_prior_hosp.csv
+visit_schi_v1 --> schi_cohort_v1.csv
+visit_schi_v2 --> schi_cohort_v2.csv
+
+topics_visualization_lda
+topics_visualization_lda_med_lab
